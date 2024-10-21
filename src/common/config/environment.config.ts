@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export const NODE_ENV = process.env.NODE_ENV;
-export const APP_SECRET = Boolean(Number(process.env.APP_SECRET));
+export const APP_SECRET = process.env.APP_SECRET;
 
 // Domain
 export const APP_HOST = Number(process.env.APP_HOST);

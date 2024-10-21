@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, DataSource } from "typeorm";
 import { Role } from "../constants";
 
 @Entity()
-export class User {
+export class UserEntity {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -12,7 +12,7 @@ export class User {
     @Column({ length: 255, nullable: true })
     lastName?: string;
 
-    @Column({ length: 100 })
+    @Column({ length: 100, unique: true })
     email: string;
 
     @Column({ length: 100 })
@@ -30,6 +30,6 @@ export const USER_REPOSITORY_INJECT_KEY = "USER_REPOSITORY";
 
 export const userRepository = {
     provide: USER_REPOSITORY_INJECT_KEY,
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(User),
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(UserEntity),
     inject: ["DATA_SOURCE"],
 };

@@ -4,6 +4,5 @@ export * from "./filters";
 export * from "./swagger";
 export * from "./request";
 export * from "./share";
-export * from "./auth";
 export * from "./logger";
 export * from "./transform";
