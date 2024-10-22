@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserService } from "./user.service";
 import { UserRegisterRequestDto } from "./dtos/user-register-request.dto";
 import { UserLoginRequestDto } from "./dtos/user-login-request.dto";
-import { AuthGuard } from "./auth.guard";
+import { AuthGuard } from "./guards/auth.guard";
 
 @ApiTags("User")
 @Controller("user")

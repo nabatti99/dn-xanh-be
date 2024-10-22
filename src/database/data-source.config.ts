@@ -20,7 +20,7 @@ const dataSource: DataSource = new DataSource({
     entities: [__dirname + "/../**/*.entity{.ts,.js}"],
     migrations: [__dirname + "/migrations/*{.ts,.js}"],
     synchronize: false,
-    logging: true,
+    logging: process.env.NODE_ENV === "production" ? false : true,
 });
 
 export default dataSource;

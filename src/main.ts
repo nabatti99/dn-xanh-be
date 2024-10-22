@@ -1,8 +1,8 @@
-import { AllExceptionsFilter, AppLoggerService, TransformInterceptor, integrateSwagger } from "@src/common";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { APP_API_PREFIX, APP_CORS_ORIGINS, APP_PORT } from "./app.constants";
 import { AppModule } from "./app.module";
+import { AllExceptionsFilter, AppLoggerService, integrateSwagger } from "@common";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
