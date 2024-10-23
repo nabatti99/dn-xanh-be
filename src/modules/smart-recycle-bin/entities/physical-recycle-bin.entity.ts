@@ -2,6 +2,7 @@ import { Column, DataSource, Entity, Index, JoinColumn, ManyToOne, OneToMany } f
 import { AppBaseEntity } from "@database/app-base.entity";
 import { PhysicalRecycleBinStatus, WasteType } from "../constants";
 import { SmartRecycleBinEntity } from "./smart-recycle-bin.entity";
+import { SmartRecycleBinClassificationHistoryEntity } from "./smart-recycle-bin-classification-history.entity";
 
 @Entity()
 export class PhysicalRecycleBinEntity extends AppBaseEntity {
@@ -34,6 +35,9 @@ export class PhysicalRecycleBinEntity extends AppBaseEntity {
     @ManyToOne(() => SmartRecycleBinEntity, (smartRecycleBin) => smartRecycleBin.physicalRecycleBins, { onDelete: "CASCADE" })
     @JoinColumn({ name: "smart_recycle_bin_id", referencedColumnName: "id" })
     smartRecycleBin: SmartRecycleBinEntity;
+
+    @OneToMany(() => SmartRecycleBinClassificationHistoryEntity, (cleanHistory) => cleanHistory.physicalRecycleBin)
+    classificationHistories: SmartRecycleBinClassificationHistoryEntity[];
 }
 
 export const PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY = "PHYSICAL_RECYCLE_BIN_REPOSITORY";

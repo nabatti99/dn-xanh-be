@@ -1,7 +1,7 @@
 import { Column, DataSource, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { SmartRecycleBinEntity } from "./smart-recycle-bin.entity";
 import { AppBaseEntity } from "@database/app-base.entity";
 import { UserEntity } from "@modules/user/entities/user.entity";
+import { PhysicalRecycleBinEntity } from "./physical-recycle-bin.entity";
 
 @Entity()
 export class SmartRecycleBinClassificationHistoryEntity extends AppBaseEntity {
@@ -9,16 +9,16 @@ export class SmartRecycleBinClassificationHistoryEntity extends AppBaseEntity {
     volume: number;
 
     @Column({ type: "uuid" })
-    smartRecycleBinId: string;
+    physicalRecycleBinId: string;
 
     @Column({ type: "uuid" })
     classifyByUserId: string;
 
-    @ManyToOne(() => SmartRecycleBinEntity, (smartRecycleBin) => smartRecycleBin.classificationHistories, { onDelete: "CASCADE" })
-    @JoinColumn({ name: "smart_recycle_bin_id", referencedColumnName: "id" })
-    smartRecycleBin: SmartRecycleBinEntity;
+    @ManyToOne(() => PhysicalRecycleBinEntity, (physicalRecycleBin) => physicalRecycleBin.classificationHistories, { onDelete: "SET NULL" })
+    @JoinColumn({ name: "physical_recycle_bin_id", referencedColumnName: "id" })
+    physicalRecycleBin: PhysicalRecycleBinEntity;
 
-    @ManyToOne(() => UserEntity, (user) => user.classificationHistories, { onDelete: "SET NULL" })
+    @ManyToOne(() => UserEntity, (user) => user.classificationHistories, { onDelete: "CASCADE" })
     @JoinColumn({ name: "classify_by_user_id", referencedColumnName: "id" })
     classifyByUser: UserEntity;
 }
