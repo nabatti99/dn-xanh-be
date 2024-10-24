@@ -38,10 +38,10 @@ export class LandfillEntity extends AppBaseEntity {
     reportedBy: UserEntity;
 }
 
-export const PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY = "PHYSICAL_RECYCLE_BIN_REPOSITORY";
+export const LANDFILL_REPOSITORY_INJECT_KEY = "LANDFILL_REPOSITORY";
 
-export const physicalRecycleBinRepository = {
-    provide: PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY,
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(PhysicalRecycleBinEntity),
+export const landfillRepository = {
+    provide: LANDFILL_REPOSITORY_INJECT_KEY,
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(LandfillEntity),
     inject: ["DATA_SOURCE"],
 };

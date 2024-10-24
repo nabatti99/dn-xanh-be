@@ -3,6 +3,7 @@ import { Role } from "../constants";
 import { AppBaseEntity } from "@database/app-base.entity";
 import { SmartRecycleBinCleanHistoryEntity } from "@modules/smart-recycle-bin/entities/smart-recycle-bin-clean-history.entity";
 import { SmartRecycleBinClassificationHistoryEntity } from "@modules/smart-recycle-bin/entities/smart-recycle-bin-classification-history.entity";
+import { LandfillEntity } from "@modules/landfill/entities/landfill.entity";
 
 @Entity()
 export class UserEntity extends AppBaseEntity {
@@ -33,6 +34,9 @@ export class UserEntity extends AppBaseEntity {
 
     @OneToMany(() => SmartRecycleBinClassificationHistoryEntity, (cleanHistory) => cleanHistory.classifyByUser)
     classificationHistories: SmartRecycleBinClassificationHistoryEntity[];
+
+    @OneToMany(() => LandfillEntity, (cleanHistory) => cleanHistory.reportedBy)
+    reportedLandfills: SmartRecycleBinClassificationHistoryEntity[];
 }
 
 export const USER_REPOSITORY_INJECT_KEY = "USER_REPOSITORY";
