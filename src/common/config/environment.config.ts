@@ -13,4 +13,4 @@ export const APP_API_PREFIX = process.env.APP_API_PREFIX;
 export const APP_CORS_ORIGINS = [process.env.APP_CORS_ORIGIN, process.env.APP_CORS_ORIGIN_LOCAL, process.env.APP_CORS_ORIGIN_LOCAL_SHARE];
 
 // API Server
-export const SERVER_API_BASE_URL = process.env.SERVER_API_BASE_URL;
+export const AI_SERVER_BASE_URL = process.env.AI_SERVER_BASE_URL;

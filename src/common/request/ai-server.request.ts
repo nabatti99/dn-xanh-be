@@ -1,20 +1,20 @@
 import axios from "axios";
-import { SERVER_API_BASE_URL } from "../config";
+import { AI_SERVER_BASE_URL } from "../config";
 import { baseRequestConfig, baseRequestFailInterceptor, baseRequestInterceptor, baseResponseFailInterceptor, baseResponseInterceptor } from "./base.request";
 
-export const serverRequest = axios.create({
+export const aiServerRequest = axios.create({
     ...baseRequestConfig,
-    baseURL: SERVER_API_BASE_URL,
+    baseURL: AI_SERVER_BASE_URL,
 });
 
-const NAME = "ServerName";
+const NAME = "AI Server";
 
-serverRequest.interceptors.request.use(
+aiServerRequest.interceptors.request.use(
     (config) => baseRequestInterceptor(NAME, config),
     (error) => baseRequestFailInterceptor(NAME, error)
 );
 
-serverRequest.interceptors.response.use(
+aiServerRequest.interceptors.response.use(
     (response) => baseResponseInterceptor(NAME, response),
     (error) => baseResponseFailInterceptor(NAME, error)
 );

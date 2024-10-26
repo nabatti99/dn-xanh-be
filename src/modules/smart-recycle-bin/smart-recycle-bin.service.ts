@@ -11,6 +11,9 @@ import {
 } from "./entities/smart-recycle-bin-classification-history.entity";
 import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
 import { USER_REPOSITORY_INJECT_KEY, UserEntity } from "@modules/user/entities/user.entity";
+import { aiServerRequest } from "@common";
+import * as FormData from "form-data";
+import { WasteClassification, WasteType } from "./constants";
 
 @Injectable()
 export class SmartRecycleBinService {
@@ -48,7 +51,39 @@ export class SmartRecycleBinService {
     }
 
     async classifyWasteImages(files: Array<Express.Multer.File>) {
-        return files[0].filename;
+        const formData = new FormData();
+        files.forEach((file) => {
+            formData.append("files", file.buffer, file.originalname);
+        });
+
+        const response: any = await aiServerRequest.post("predict", formData, {
+            headers: {
+                ...formData.getHeaders(),
+            },
+        });
+
+        const { predictions } = response;
+
+        const wasteTypePredictionsCount: Record<WasteType, number> = {
+            [WasteType.RECYCLABLE]: 0,
+            [WasteType.ORGANIC]: 0,
+            [WasteType.NON_RECYCLABLE]: 0,
+        };
+
+        predictions.forEach((prediction) => {
+            Object.values(WasteType).forEach((wasteType) => {
+                if (WasteClassification[wasteType].includes(prediction)) wasteTypePredictionsCount[wasteType] += 1;
+            });
+        });
+
+        let maxWasteType: WasteType = WasteType.RECYCLABLE;
+        Object.values(WasteType).forEach((wasteType) => {
+            if (wasteTypePredictionsCount[wasteType] > wasteTypePredictionsCount[maxWasteType]) {
+                maxWasteType = wasteType;
+            }
+        });
+
+        return maxWasteType;
     }
 
     async classify(smartRecycleBinClassifyRequestDto: SmartRecycleBinClassifyRequestDto) {
