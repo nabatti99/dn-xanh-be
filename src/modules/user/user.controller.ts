@@ -4,6 +4,8 @@ import { UserService } from "./user.service";
 import { UserRegisterRequestDto } from "./dtos/user-register-request.dto";
 import { UserLoginRequestDto } from "./dtos/user-login-request.dto";
 import { AuthGuard } from "./guards/auth.guard";
+import { GetAuthUser } from "./decorators/get-user.decorator";
+import { UserEntity } from "./entities/user.entity";
 
 @ApiTags("User")
 @Controller("user")
@@ -23,7 +25,7 @@ export class UserController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Get("me")
-    me() {
-        return "Hello";
+    me(@GetAuthUser() user: UserEntity) {
+        return this.userService.getInfo(user);
     }
 }

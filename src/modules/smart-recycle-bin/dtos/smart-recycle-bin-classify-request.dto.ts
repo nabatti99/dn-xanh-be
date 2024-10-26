@@ -1,16 +1,37 @@
 import { TransformNumber } from "@common";
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Type } from "class-transformer";
-import { IsNotEmptyObject, IsNumber, IsObject, ValidateNested } from "class-validator";
+import { Expose } from "class-transformer";
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { WasteType } from "../constants";
 
-export class SmartRecycleBinCreateRequestDto {
+export class SmartRecycleBinClassifyRequestDto {
+    @ApiProperty({
+        type: String,
+        description: "Embedded system ID of the physical recycle bin.",
+        example: "DN-SMT-001_RECYCLABLE",
+    })
+    @IsNotEmpty()
+    @IsString()
+    @Expose()
+    embeddedSystemId: string;
+
     @ApiProperty({
         type: Number,
-        description: "The volume of waste.",
-        example: 100,
+        description: "Amount of waste in the physical recycle bin.",
+        example: 2.5,
     })
     @IsNumber()
     @TransformNumber()
     @Expose()
-    maxVolume: number;
+    volume: number;
+
+    @ApiProperty({
+        type: WasteType,
+        enum: WasteType,
+        description: "Type of waste in the physical recycle bin.",
+        example: WasteType.RECYCLABLE,
+    })
+    @IsEnum(WasteType)
+    @Expose()
+    wasteType: WasteType;
 }

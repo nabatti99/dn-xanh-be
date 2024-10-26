@@ -4,17 +4,19 @@ import { DatabaseModule } from "./database/database.module";
 import { JwtModule } from "@nestjs/jwt";
 import { APP_SECRET } from "./common";
 import { SmartRecycleBinModule } from "@modules/smart-recycle-bin/smart-recycle-bin.module";
+import { LandfillModule } from "@modules/landfill/landfill.module";
 
 @Module({
     imports: [
-        DatabaseModule,
         JwtModule.register({
             global: true,
             secret: APP_SECRET,
             signOptions: { expiresIn: "24h" },
         }),
+        DatabaseModule,
         UserModule,
         SmartRecycleBinModule,
+        LandfillModule,
     ],
     controllers: [],
     providers: [],

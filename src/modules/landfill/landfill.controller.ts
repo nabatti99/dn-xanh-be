@@ -1,8 +1,10 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
 import { LandfillService } from "./landfill.service";
 import { AdminAuthGuard } from "@modules/user/guards/admin-auth.guard";
+import { ReportLandfillReportDto } from "./dtos/report-landfill-request.dto";
+import { GetAuthUser } from "@modules/user/decorators/get-user.decorator";
+import { UserEntity } from "@modules/user/entities/user.entity";
 
 @ApiTags("Landfill")
 @Controller("landfill")
@@ -11,8 +13,8 @@ export class LandfillController {
 
     @ApiBearerAuth()
     @UseGuards(AdminAuthGuard)
-    @Post("create")
-    create(@Body() smartRecycleBinCreateRequestDto: SmartRecycleBinCreateRequestDto) {
-        return this.userService.create(smartRecycleBinCreateRequestDto);
+    @Post("report")
+    report(@Body() reportLandfillReportDto: ReportLandfillReportDto, @GetAuthUser() user: UserEntity) {
+        return this.userService.report(reportLandfillReportDto, user);
     }
 }

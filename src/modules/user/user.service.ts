@@ -50,4 +50,10 @@ export class UserService {
 
         return this.jwtService.sign(jwtPayload);
     }
+
+    async getInfo(user: UserEntity) {
+        delete user.password;
+
+        return user;
+    }
 }

@@ -1,8 +1,15 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { AdminAuthGuard } from "@modules/user/guards/admin-auth.guard";
+import { Body, Controller, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
 import { SmartRecycleBinService } from "./smart-recycle-bin.service";
-import { AdminAuthGuard } from "@modules/user/guards/admin-auth.guard";
+import { ApiMultiFile } from "@common/swagger/decorators/api-multi-file";
+import { ApiFile } from "@common/swagger/decorators/api-file";
+import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
+import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
+import { AuthGuard } from "@modules/user/guards/auth.guard";
+import { GetAuthUser } from "@modules/user/decorators/get-user.decorator";
 
 @ApiTags("Smart Recycle Bin")
 @Controller("smart-recycle-bin")
@@ -16,10 +23,23 @@ export class SmartRecycleBinController {
         return this.userService.create(smartRecycleBinCreateRequestDto);
     }
 
-    @ApiBearerAuth()
-    @UseGuards(AdminAuthGuard)
+    @Post("classify-waste-images")
+    @ApiConsumes("multipart/form-data")
+    @ApiMultiFile("files")
+    @UseInterceptors(FilesInterceptor("files"))
+    classifyWaste(@UploadedFiles() files: Array<Express.Multer.File>) {
+        return this.userService.classifyWasteImages(files);
+    }
+
     @Post("classify")
-    classify(@Body() smartRecycleBinCreateRequestDto: SmartRecycleBinCreateRequestDto) {
-        return this.userService.create(smartRecycleBinCreateRequestDto);
+    classify(@Body() smartRecycleBinClassifyRequestDto: SmartRecycleBinClassifyRequestDto) {
+        return this.userService.classify(smartRecycleBinClassifyRequestDto);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @Post("claim-reward")
+    classifyImage(@Body() smartRecycleBinClaimRewardRequestDto: SmartRecycleBinClaimRewardRequestDto, @GetAuthUser() user) {
+        return this.userService.claimReward(smartRecycleBinClaimRewardRequestDto, user);
     }
 }

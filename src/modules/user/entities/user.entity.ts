@@ -22,6 +22,9 @@ export class UserEntity extends AppBaseEntity {
     @Column({ length: 255, nullable: true })
     address?: string;
 
+    @Column({ type: "int4", default: 0 })
+    greenPoint: number;
+
     @Column({
         type: "enum",
         enum: Role,

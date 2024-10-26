@@ -4,10 +4,11 @@ import { SmartRecycleBinService } from "./smart-recycle-bin.service";
 import { smartRecycleBinRepository } from "./entities/smart-recycle-bin.entity";
 import { userRepository } from "@modules/user/entities/user.entity";
 import { physicalRecycleBinRepository } from "./entities/physical-recycle-bin.entity";
+import { smartRecycleBinClassificationHistoryRepository } from "./entities/smart-recycle-bin-classification-history.entity";
 
 @Module({
     imports: [],
-    providers: [userRepository, physicalRecycleBinRepository, smartRecycleBinRepository, SmartRecycleBinService],
+    providers: [userRepository, physicalRecycleBinRepository, smartRecycleBinRepository, smartRecycleBinClassificationHistoryRepository, SmartRecycleBinService],
     controllers: [SmartRecycleBinController],
     exports: [],
 })

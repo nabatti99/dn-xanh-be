@@ -21,14 +21,14 @@ export class LandfillEntity extends AppBaseEntity {
         type: "enum",
         enum: LandfillType,
     })
-    LandfillType: LandfillType;
+    type: LandfillType;
 
     @Column({
         type: "enum",
         enum: LandfillPollutionLevel,
         default: LandfillPollutionLevel.NORMAL,
     })
-    status: LandfillPollutionLevel;
+    level: LandfillPollutionLevel;
 
     @Column({ type: "uuid" })
     reportedByUserId: string;

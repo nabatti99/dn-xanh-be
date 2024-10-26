@@ -32,7 +32,7 @@ export class PhysicalRecycleBinCreateRequestDto {
     @ApiProperty({
         type: String,
         description: "The physical recycle bin's embedded system ID.",
-        example: "ID-123",
+        example: "DN-SMT-001_RECYCLABLE",
     })
     @IsString()
     @Expose()
@@ -53,7 +53,7 @@ export class PhysicalRecycleBinCreateRequestDto {
         type: String,
         enum: WasteType,
         description: `The physical recycle bin's waste type: ${Object.values(WasteType).join(", ")}.`,
-        example: WasteType.RECYCLE,
+        example: WasteType.RECYCLABLE,
     })
     @IsEnum(WasteType)
     @Expose()
@@ -61,6 +61,15 @@ export class PhysicalRecycleBinCreateRequestDto {
 }
 
 export class SmartRecycleBinCreateRequestDto {
+    @ApiProperty({
+        type: String,
+        description: "The smart recycle bin's name.",
+        example: "DN-SMT-001",
+    })
+    @IsString()
+    @Expose()
+    name: string;
+
     @ApiProperty({
         type: SmartRecycleBinLocationRequestDto,
         description: "The smart recycle bin's location.",

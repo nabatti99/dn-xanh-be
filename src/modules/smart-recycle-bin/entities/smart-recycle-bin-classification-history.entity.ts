@@ -8,10 +8,16 @@ export class SmartRecycleBinClassificationHistoryEntity extends AppBaseEntity {
     @Column({ type: "double precision" })
     volume: number;
 
+    @Column({ type: "boolean" })
+    isCorrect: boolean;
+
+    @Column({ type: "boolean", default: false })
+    isClaimed: boolean;
+
     @Column({ type: "uuid" })
     physicalRecycleBinId: string;
 
-    @Column({ type: "uuid" })
+    @Column({ type: "uuid", nullable: true })
     classifyByUserId: string;
 
     @ManyToOne(() => PhysicalRecycleBinEntity, (physicalRecycleBin) => physicalRecycleBin.classificationHistories, { onDelete: "SET NULL" })

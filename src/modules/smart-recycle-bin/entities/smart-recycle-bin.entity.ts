@@ -1,11 +1,15 @@
 import { AppBaseEntity } from "@database/app-base.entity";
-import { Column, DataSource, Entity, OneToMany } from "typeorm";
+import { Column, DataSource, Entity, Index, OneToMany } from "typeorm";
 import { SmartRecycleBinStatus } from "../constants";
 import { PhysicalRecycleBinEntity } from "./physical-recycle-bin.entity";
 import { SmartRecycleBinCleanHistoryEntity } from "./smart-recycle-bin-clean-history.entity";
 
 @Entity()
 export class SmartRecycleBinEntity extends AppBaseEntity {
+    @Index()
+    @Column({ length: 100, unique: true })
+    name: string;
+
     @Column({ type: "double precision", default: 16.06 })
     locationLatitude: number;
 

@@ -1,39 +1,27 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
-import { SMART_RECYCLE_BIN_REPOSITORY_INJECT_KEY, SmartRecycleBinEntity } from "./entities/smart-recycle-bin.entity";
-import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
-import { PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY, PhysicalRecycleBinEntity } from "./entities/landfill.entity";
+import { LANDFILL_REPOSITORY_INJECT_KEY, LandfillEntity } from "./entities/landfill.entity";
+import { ReportLandfillReportDto } from "./dtos/report-landfill-request.dto";
+import { UserEntity } from "@modules/user/entities/user.entity";
 
 @Injectable()
 export class LandfillService {
     constructor(
-        @Inject(PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY)
-        private physicalRecycleBinRepository: Repository<PhysicalRecycleBinEntity>,
-        @Inject(SMART_RECYCLE_BIN_REPOSITORY_INJECT_KEY)
-        private smartRecycleBinRepository: Repository<SmartRecycleBinEntity>,
-        private jwtService: JwtService
+        @Inject(LANDFILL_REPOSITORY_INJECT_KEY)
+        private landfillRepository: Repository<LandfillEntity>
     ) {}
 
-    async report(smartRecycleBinCreateRequestDto: SmartRecycleBinCreateRequestDto) {
-        const newSmartRecycleBin = await this.smartRecycleBinRepository.save({
-            locationLatitude: smartRecycleBinCreateRequestDto.location.latitude,
-            locationLongitude: smartRecycleBinCreateRequestDto.location.longitude,
+    async report(reportLandfillReportDto: ReportLandfillReportDto, reportBy: UserEntity) {
+        const newLandfill = await this.landfillRepository.save({
+            name: reportLandfillReportDto.name,
+            description: reportLandfillReportDto.description,
+            locationLatitude: reportLandfillReportDto.location.latitude,
+            locationLongitude: reportLandfillReportDto.location.longitude,
+            type: reportLandfillReportDto.type,
+            reportedBy: reportBy,
         });
 
-        console.log(newSmartRecycleBin.id);
-
-        const newPhysicalRecycleBins = await this.physicalRecycleBinRepository.save(
-            smartRecycleBinCreateRequestDto.physicalRecycleBins.map((physicalRecycleBin) => ({
-                embeddedSystemId: physicalRecycleBin.embeddedSystemId,
-                maxVolume: physicalRecycleBin.maxVolume,
-                wasteType: physicalRecycleBin.wasteType,
-                smartRecycleBinId: newSmartRecycleBin.id,
-            }))
-        );
-
-        newSmartRecycleBin.physicalRecycleBins = newPhysicalRecycleBins;
-
-        return newSmartRecycleBin;
+        return newLandfill;
     }
 }

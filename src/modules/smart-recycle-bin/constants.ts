@@ -13,7 +13,7 @@ export enum PhysicalRecycleBinStatus {
 }
 
 export enum WasteType {
-    RECYCLE = "RECYCLE",
+    RECYCLABLE = "RECYCLABLE",
     ORGANIC = "ORGANIC",
-    INORGANIC = "INORGANIC",
+    NON_RECYCLABLE = "NON_RECYCLABLE",
 }
