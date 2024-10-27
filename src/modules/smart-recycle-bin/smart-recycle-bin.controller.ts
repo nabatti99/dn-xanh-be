@@ -10,6 +10,7 @@ import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-clas
 import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
 import { AuthGuard } from "@modules/user/guards/auth.guard";
 import { GetAuthUser } from "@modules/user/decorators/get-user.decorator";
+import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 
 @ApiTags("Smart Recycle Bin")
 @Controller("smart-recycle-bin")
@@ -27,7 +28,7 @@ export class SmartRecycleBinController {
     @ApiConsumes("multipart/form-data")
     @ApiMultiFile("files")
     @UseInterceptors(FilesInterceptor("files"))
-    classifyWaste(@UploadedFiles() files: Array<Express.Multer.File>) {
+    classifyWasteImages(@UploadedFiles() files: Array<Express.Multer.File>) {
         return this.userService.classifyWasteImages(files);
     }
 
@@ -39,7 +40,12 @@ export class SmartRecycleBinController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Post("claim-reward")
-    classifyImage(@Body() smartRecycleBinClaimRewardRequestDto: SmartRecycleBinClaimRewardRequestDto, @GetAuthUser() user) {
+    claimReward(@Body() smartRecycleBinClaimRewardRequestDto: SmartRecycleBinClaimRewardRequestDto, @GetAuthUser() user) {
         return this.userService.claimReward(smartRecycleBinClaimRewardRequestDto, user);
+    }
+
+    @Post("check-claim-reward")
+    checkClaimReward(@Body() smartRecycleBinCheckClaimRewardRequestDto: SmartRecycleBinCheckClaimRewardRequestDto) {
+        return this.userService.checkClaimReward(smartRecycleBinCheckClaimRewardRequestDto);
     }
 }

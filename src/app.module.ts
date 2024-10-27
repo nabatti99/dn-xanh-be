@@ -5,6 +5,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { APP_SECRET } from "./common";
 import { SmartRecycleBinModule } from "@modules/smart-recycle-bin/smart-recycle-bin.module";
 import { LandfillModule } from "@modules/landfill/landfill.module";
+import { HealthyModule } from "@modules/healthy/healthy.module";
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { LandfillModule } from "@modules/landfill/landfill.module";
             signOptions: { expiresIn: "24h" },
         }),
         DatabaseModule,
+        HealthyModule,
         UserModule,
         SmartRecycleBinModule,
         LandfillModule,

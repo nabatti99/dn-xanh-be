@@ -14,6 +14,7 @@ import { USER_REPOSITORY_INJECT_KEY, UserEntity } from "@modules/user/entities/u
 import { aiServerRequest } from "@common";
 import * as FormData from "form-data";
 import { WasteClassification, WasteType } from "./constants";
+import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 
 @Injectable()
 export class SmartRecycleBinService {
@@ -113,12 +114,14 @@ export class SmartRecycleBinService {
             const token = this.jwtService.sign(claimDataPayload);
 
             return {
+                smartRecycleBinClassificationHistoryId: newSmartRecycleBinClassificationHistory.id,
                 isCorrect: true,
                 token,
             };
         }
 
         return {
+            smartRecycleBinClassificationHistoryId: newSmartRecycleBinClassificationHistory.id,
             isCorrect: false,
         };
     }
@@ -150,6 +153,21 @@ export class SmartRecycleBinService {
 
         return {
             message: "Tích điểm thành công",
+        };
+    }
+
+    async checkClaimReward(smartRecycleBinCheckClaimRewardRequestDto: SmartRecycleBinCheckClaimRewardRequestDto) {
+        const classificationHistory = await this.smartRecycleBinClassificationHistoryRepository.findOne({
+            where: {
+                id: smartRecycleBinCheckClaimRewardRequestDto.smartRecycleBinClassificationHistoryId,
+            },
+        });
+
+        if (!classificationHistory) throw new BadRequestException("Không tìm thấy lịch sử phân loại rác");
+        if (classificationHistory.isClaimed) throw new BadRequestException("Bạn đã tích điểm phần thưởng này rồi");
+
+        return {
+            isClaimed: classificationHistory.isClaimed,
         };
     }
 }
