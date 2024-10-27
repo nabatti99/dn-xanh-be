@@ -18,6 +18,39 @@ export enum WasteType {
     NON_RECYCLABLE = "NON_RECYCLABLE",
 }
 
+export const WasteClassificationMap = {
+    aerosol_cans: "Bình xịt",
+    aluminum_food_cans: "Lon thực phẩm",
+    aluminum_soda_cans: "Lon nước ngọt",
+    steel_food_cans: "Lon thực phẩm",
+    cardboard_boxes: "Hộp giấy",
+    cardboard_packaging: "Bao bì giấy",
+    magazines: "Tạp chí",
+    newspaper: "Báo",
+    office_paper: "Giấy văn phòng",
+    paper_cups: "Ly giấy",
+    glass_beverage_bottles: "Chai thủy tinh",
+    glass_cosmetic_containers: "Chai thủy tinh",
+    glass_food_jars: "Chai thủy tinh",
+    plastic_detergent_bottles: "Chai nhựa",
+    plastic_food_containers: "Chai nhựa",
+    plastic_soda_bottles: "Chai nhựa",
+    plastic_water_bottles: "Chai nhựa",
+    coffee_grounds: "Cà phê",
+    eggshells: "Vỏ trứng",
+    food_waste: "Thức ăn thừa",
+    tea_bags: "Túi trà",
+    clothing: "Quần áo",
+    disposable_plastic_cutlery: "Đồ ăn nhựa",
+    plastic_cup_lids: "Nắp ly nhựa",
+    plastic_shopping_bags: "Túi nhựa",
+    plastic_straws: "Ống hút nhựa",
+    plastic_trash_bags: "Túi rác nhựa",
+    shoes: "Giày",
+    styrofoam_cups: "Ly nhựa",
+    styrofoam_food_containers: "Hộp thức ăn",
+};
+
 export const WasteClassification: Record<WasteType, string[]> = {
     [WasteType.RECYCLABLE]: [
         "aerosol_cans",

@@ -13,8 +13,9 @@ import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-c
 import { USER_REPOSITORY_INJECT_KEY, UserEntity } from "@modules/user/entities/user.entity";
 import { aiServerRequest } from "@common";
 import * as FormData from "form-data";
-import { WasteClassification, WasteType } from "./constants";
+import { WasteClassification, WasteClassificationMap, WasteType } from "./constants";
 import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
+import { cameraServerRequest } from "@common/request/camera-server.request";
 
 @Injectable()
 export class SmartRecycleBinService {
@@ -124,6 +125,43 @@ export class SmartRecycleBinService {
             smartRecycleBinClassificationHistoryId: newSmartRecycleBinClassificationHistory.id,
             isCorrect: false,
         };
+    }
+
+    async captureAndClassify() {
+        try {
+            // Capture image, convert to buffer and send to AI server
+            const cameraResponse: any = await cameraServerRequest.get("capture", {
+                responseType: "arraybuffer",
+            });
+            const imageBuffer = Buffer.from(cameraResponse, "binary");
+
+            const formData = new FormData();
+            formData.append("files", imageBuffer, "image.jpg");
+
+            const serverResponse: any = await aiServerRequest.post("predict", formData, {
+                headers: {
+                    ...formData.getHeaders(),
+                },
+            });
+            const { predictions } = serverResponse;
+            const prediction = predictions[0];
+            const predictionDisplay = WasteClassificationMap[prediction];
+
+            let wasteTypePrediction: WasteType;
+            Object.values(WasteType).forEach((wasteType) => {
+                if (WasteClassification[wasteType].includes(prediction)) wasteTypePrediction = wasteType;
+            });
+
+            return {
+                prediction,
+                predictionDisplay,
+                wasteTypePrediction,
+            };
+        } catch (error) {
+            console.log(error.response.data);
+
+            throw error;
+        }
     }
 
     async claimReward(smartRecycleBinClaimRewardRequestDto: SmartRecycleBinClaimRewardRequestDto, user: UserEntity) {

@@ -14,3 +14,4 @@ export const APP_CORS_ORIGINS = [process.env.APP_CORS_ORIGIN, process.env.APP_CO
 
 // API Server
 export const AI_SERVER_BASE_URL = process.env.AI_SERVER_BASE_URL;
+export const CAMERA_SERVER_BASE_URL = process.env.CAMERA_SERVER_BASE_URL;
