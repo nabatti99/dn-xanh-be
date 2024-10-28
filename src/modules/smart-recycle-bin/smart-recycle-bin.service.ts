@@ -16,6 +16,8 @@ import * as FormData from "form-data";
 import { WasteClassification, WasteClassificationMap, WasteType } from "./constants";
 import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 import { cameraServerRequest } from "@common/request/camera-server.request";
+import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
+import { SmartRecycleBinCaptureAndClassifyRequestDto } from "./dtos/smart-recycle-bin-capture-and-classify-request.dto";
 
 @Injectable()
 export class SmartRecycleBinService {
@@ -30,6 +32,21 @@ export class SmartRecycleBinService {
         private userRepository: Repository<UserEntity>,
         private jwtService: JwtService
     ) {}
+
+    async get(smartRecycleBinGetRequestDto: SmartRecycleBinGetRequestDto) {
+        return this.smartRecycleBinRepository.findOne({
+            where: {
+                id: smartRecycleBinGetRequestDto.id,
+            },
+            relations: ["physicalRecycleBins"],
+        });
+    }
+
+    async getAll() {
+        return this.smartRecycleBinRepository.find({
+            relations: ["physicalRecycleBins"],
+        });
+    }
 
     async create(smartRecycleBinCreateRequestDto: SmartRecycleBinCreateRequestDto) {
         const newSmartRecycleBin = await this.smartRecycleBinRepository.save({
@@ -127,11 +144,12 @@ export class SmartRecycleBinService {
         };
     }
 
-    async captureAndClassify() {
+    async captureAndClassify(smartRecycleBinCaptureAndClassifyRequestDto: SmartRecycleBinCaptureAndClassifyRequestDto) {
         try {
             // Capture image, convert to buffer and send to AI server
             const cameraResponse: any = await cameraServerRequest.get("capture", {
                 responseType: "arraybuffer",
+                baseURL: smartRecycleBinCaptureAndClassifyRequestDto.cameraUrl,
             });
             const imageBuffer = Buffer.from(cameraResponse, "binary");
 
@@ -187,9 +205,10 @@ export class SmartRecycleBinService {
         await this.smartRecycleBinClassificationHistoryRepository.save(classificationHistory);
 
         user.greenPoint += tokenPayload.greenPoint;
-        await this.userRepository.save(user);
+        const savedUser = await this.userRepository.save(user);
 
         return {
+            greenPoint: savedUser.greenPoint,
             message: "Tích điểm thành công",
         };
     }

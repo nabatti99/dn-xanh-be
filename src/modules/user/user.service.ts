@@ -23,7 +23,7 @@ export class UserService {
         });
 
         return {
-            access_token: await this.generateAccessToken(newUser),
+            accessToken: await this.generateAccessToken(newUser),
         };
     }
 
@@ -34,11 +34,11 @@ export class UserService {
             },
         });
 
-        if (!existedUser) throw new Error("User not found");
+        if (!existedUser) throw new Error("Không tìm thấy người dùng");
         if (!bcrypt.compareSync(userLoginRequest.password, existedUser.password)) throw new Error("Password is incorrect");
 
         return {
-            access_token: await this.generateAccessToken(existedUser),
+            accessToken: await this.generateAccessToken(existedUser),
         };
     }
 
