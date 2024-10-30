@@ -2,11 +2,18 @@ import { Column, DataSource, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { AppBaseEntity } from "@database/app-base.entity";
 import { UserEntity } from "@modules/user/entities/user.entity";
 import { PhysicalRecycleBinEntity } from "./physical-recycle-bin.entity";
+import { WasteType } from "../constants";
 
 @Entity()
 export class SmartRecycleBinClassificationHistoryEntity extends AppBaseEntity {
     @Column({ type: "double precision" })
     volume: number;
+
+    @Column({
+        type: "enum",
+        enum: WasteType,
+    })
+    wasteType: WasteType;
 
     @Column({ type: "boolean" })
     isCorrect: boolean;

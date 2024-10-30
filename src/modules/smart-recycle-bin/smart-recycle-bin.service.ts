@@ -114,6 +114,7 @@ export class SmartRecycleBinService {
 
         const newSmartRecycleBinClassificationHistory = await this.smartRecycleBinClassificationHistoryRepository.save({
             physicalRecycleBinId: physicalRecycleBin.id,
+            wasteType: smartRecycleBinClassifyRequestDto.wasteType,
             volume: smartRecycleBinClassifyRequestDto.volume,
             isCorrect: smartRecycleBinClassifyRequestDto.wasteType === physicalRecycleBin.wasteType,
         });
@@ -202,6 +203,7 @@ export class SmartRecycleBinService {
         if (!classificationHistory.isCorrect) throw new BadRequestException("Phân loại rác không chính xác");
 
         classificationHistory.isClaimed = true;
+        classificationHistory.classifyByUserId = user.id;
         await this.smartRecycleBinClassificationHistoryRepository.save(classificationHistory);
 
         user.greenPoint += tokenPayload.greenPoint;
@@ -218,13 +220,14 @@ export class SmartRecycleBinService {
             where: {
                 id: smartRecycleBinCheckClaimRewardRequestDto.smartRecycleBinClassificationHistoryId,
             },
+            relations: ["classifyByUser"]
         });
 
         if (!classificationHistory) throw new BadRequestException("Không tìm thấy lịch sử phân loại rác");
-        if (classificationHistory.isClaimed) throw new BadRequestException("Bạn đã tích điểm phần thưởng này rồi");
 
         return {
             isClaimed: classificationHistory.isClaimed,
+            userName: classificationHistory.classifyByUser && `${classificationHistory.classifyByUser.lastName} ${classificationHistory.classifyByUser.firstName}`
         };
     }
 }
