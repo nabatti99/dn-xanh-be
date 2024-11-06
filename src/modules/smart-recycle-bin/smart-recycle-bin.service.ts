@@ -148,10 +148,13 @@ export class SmartRecycleBinService {
     async captureAndClassify(smartRecycleBinCaptureAndClassifyRequestDto: SmartRecycleBinCaptureAndClassifyRequestDto) {
         try {
             // Capture image, convert to buffer and send to AI server
+            console.log("Capture image, convert to buffer and send to AI server");
+
             const cameraResponse: any = await cameraServerRequest.get("capture", {
                 responseType: "arraybuffer",
                 baseURL: smartRecycleBinCaptureAndClassifyRequestDto.cameraUrl,
             });
+
             const imageBuffer = Buffer.from(cameraResponse, "binary");
 
             const formData = new FormData();
@@ -177,7 +180,8 @@ export class SmartRecycleBinService {
                 wasteTypePrediction,
             };
         } catch (error) {
-            console.log(error.response.data);
+            console.log("Error when capturing and classifying waste images");
+            console.log(error);
 
             throw error;
         }
@@ -220,14 +224,14 @@ export class SmartRecycleBinService {
             where: {
                 id: smartRecycleBinCheckClaimRewardRequestDto.smartRecycleBinClassificationHistoryId,
             },
-            relations: ["classifyByUser"]
+            relations: ["classifyByUser"],
         });
 
         if (!classificationHistory) throw new BadRequestException("Không tìm thấy lịch sử phân loại rác");
 
         return {
             isClaimed: classificationHistory.isClaimed,
-            userName: classificationHistory.classifyByUser && `${classificationHistory.classifyByUser.lastName} ${classificationHistory.classifyByUser.firstName}`
+            userName: classificationHistory.classifyByUser && `${classificationHistory.classifyByUser.lastName} ${classificationHistory.classifyByUser.firstName}`,
         };
     }
 }
