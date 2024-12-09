@@ -5,7 +5,9 @@ import { AppModule } from "./app.module";
 import { AllExceptionsFilter, AppLoggerService, integrateSwagger } from "@common";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+        rawBody: true,
+    });
 
     app.enableCors({
         origin: APP_CORS_ORIGINS.join(","),

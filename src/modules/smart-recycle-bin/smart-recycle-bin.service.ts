@@ -1,26 +1,31 @@
+import { aiServerRequest } from "@common";
+import { USER_REPOSITORY_INJECT_KEY, UserEntity } from "@modules/user/entities/user.entity";
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import * as FormData from "form-data";
 import { Repository } from "typeorm";
-import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
-import { PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY, PhysicalRecycleBinEntity } from "./entities/physical-recycle-bin.entity";
-import { SMART_RECYCLE_BIN_REPOSITORY_INJECT_KEY, SmartRecycleBinEntity } from "./entities/smart-recycle-bin.entity";
+import { WasteClassification, WasteClassificationMap, WasteType } from "./constants";
+import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
+import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
 import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
+import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
+import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
+import { PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY, PhysicalRecycleBinEntity } from "./entities/physical-recycle-bin.entity";
 import {
     SMART_RECYCLE_BIN_CLASSIFICATION_HISTORY_REPOSITORY_INJECT_KEY,
     SmartRecycleBinClassificationHistoryEntity,
 } from "./entities/smart-recycle-bin-classification-history.entity";
-import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
-import { USER_REPOSITORY_INJECT_KEY, UserEntity } from "@modules/user/entities/user.entity";
-import { aiServerRequest } from "@common";
-import * as FormData from "form-data";
-import { WasteClassification, WasteClassificationMap, WasteType } from "./constants";
-import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
-import { cameraServerRequest } from "@common/request/camera-server.request";
-import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
-import { SmartRecycleBinCaptureAndClassifyRequestDto } from "./dtos/smart-recycle-bin-capture-and-classify-request.dto";
+import { SMART_RECYCLE_BIN_REPOSITORY_INJECT_KEY, SmartRecycleBinEntity } from "./entities/smart-recycle-bin.entity";
+import * as fs from "fs";
 
 @Injectable()
 export class SmartRecycleBinService {
+    private static uploadQueue: {
+        timestamp: number;
+        task?: Promise<any>;
+    }[] = [];
+
     constructor(
         @Inject(PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY)
         private physicalRecycleBinRepository: Repository<PhysicalRecycleBinEntity>,
@@ -145,19 +150,14 @@ export class SmartRecycleBinService {
         };
     }
 
-    async captureAndClassify(smartRecycleBinCaptureAndClassifyRequestDto: SmartRecycleBinCaptureAndClassifyRequestDto) {
+    async uploadAndClassify(request: Request) {
+        // SmartRecycleBinService.uploadQueue.push();
+
         try {
-            // Capture image, convert to buffer and send to AI server
-            console.log("Capture image, convert to buffer and send to AI server");
-
-            const cameraResponse: any = await cameraServerRequest.get("capture", {
-                responseType: "arraybuffer",
-                baseURL: smartRecycleBinCaptureAndClassifyRequestDto.cameraUrl,
-            });
-
-            const imageBuffer = Buffer.from(cameraResponse, "binary");
+            request.pipe(fs.createWriteStream("image.jpg"));
 
             const formData = new FormData();
+            const imageBuffer = fs.readFileSync("image.jpg");
             formData.append("files", imageBuffer, "image.jpg");
 
             const serverResponse: any = await aiServerRequest.post("predict", formData, {
@@ -180,8 +180,8 @@ export class SmartRecycleBinService {
                 wasteTypePrediction,
             };
         } catch (error) {
-            console.log("Error when capturing and classifying waste images");
-            console.log(error);
+            console.log("Error when uploading and classifying waste images");
+            // console.log(error);
 
             throw error;
         }

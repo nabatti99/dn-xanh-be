@@ -2,16 +2,16 @@ import { ApiMultiFile } from "@common/swagger/decorators/api-multi-file";
 import { GetAuthUser } from "@modules/user/decorators/get-user.decorator";
 import { AdminAuthGuard } from "@modules/user/guards/admin-auth.guard";
 import { AuthGuard } from "@modules/user/guards/auth.guard";
-import { Body, Controller, Get, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { Request } from "express";
 import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
 import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
 import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
-import { SmartRecycleBinService } from "./smart-recycle-bin.service";
 import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
-import { SmartRecycleBinCaptureAndClassifyRequestDto } from "./dtos/smart-recycle-bin-capture-and-classify-request.dto";
+import { SmartRecycleBinService } from "./smart-recycle-bin.service";
 
 @ApiTags("Smart Recycle Bin")
 @Controller("smart-recycle-bin")
@@ -43,9 +43,9 @@ export class SmartRecycleBinController {
         return this.smartRecycleBinService.classifyWasteImages(files);
     }
 
-    @Get("capture-and-classify")
-    captureAndClassify(@Query() smartRecycleBinCaptureAndClassifyRequestDto: SmartRecycleBinCaptureAndClassifyRequestDto) {
-        return this.smartRecycleBinService.captureAndClassify(smartRecycleBinCaptureAndClassifyRequestDto);
+    @Post("upload-and-classify")
+    uploadAndClassify(@Req() request: Request) {
+        return this.smartRecycleBinService.uploadAndClassify(request);
     }
 
     @Post("classify")
