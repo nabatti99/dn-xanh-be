@@ -119,9 +119,8 @@ export class SmartRecycleBinService {
 
         const newSmartRecycleBinClassificationHistory = await this.smartRecycleBinClassificationHistoryRepository.save({
             physicalRecycleBinId: physicalRecycleBin.id,
-            wasteType: smartRecycleBinClassifyRequestDto.wasteType,
             volume: smartRecycleBinClassifyRequestDto.volume,
-            isCorrect: smartRecycleBinClassifyRequestDto.wasteType === physicalRecycleBin.wasteType,
+            isCorrect: smartRecycleBinClassifyRequestDto.isCorrect
         });
 
         const deltaVolume = Math.abs(smartRecycleBinClassifyRequestDto.volume - physicalRecycleBin.currentVolume);
@@ -166,7 +165,8 @@ export class SmartRecycleBinService {
                 },
             });
             const { predictions } = serverResponse;
-            const prediction = predictions[0];
+            // const prediction = predictions[0];
+            const prediction = "plastic_bottle"
             const predictionDisplay = WasteClassificationMap[prediction];
 
             let wasteTypePrediction: WasteType;
@@ -178,11 +178,10 @@ export class SmartRecycleBinService {
                 prediction,
                 predictionDisplay,
                 wasteTypePrediction,
+                
             };
         } catch (error) {
             console.log("Error when uploading and classifying waste images");
-            // console.log(error);
-
             throw error;
         }
     }

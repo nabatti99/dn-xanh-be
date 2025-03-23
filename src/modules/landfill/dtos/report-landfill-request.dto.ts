@@ -63,6 +63,7 @@ export class ReportLandfillReportDto {
     @ApiProperty({
         type: LandfillType,
         enum: LandfillType,
+        enumName: "LandfillType",
         description: "Type of the landfill.",
         example: LandfillType.ILLEGAL,
     })
@@ -74,6 +75,7 @@ export class ReportLandfillReportDto {
     @ApiProperty({
         type: LandfillPollutionLevel,
         enum: LandfillPollutionLevel,
+        enumName: "LandfillPollutionLevel",
         description: "Level of the landfill.",
         example: LandfillPollutionLevel.BASIC_POLLUTANTS,
     })

@@ -1,8 +1,7 @@
 import { TransformNumber } from "@common";
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { WasteType } from "../constants";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class SmartRecycleBinClassifyRequestDto {
     @ApiProperty({
@@ -26,12 +25,11 @@ export class SmartRecycleBinClassifyRequestDto {
     volume: number;
 
     @ApiProperty({
-        type: WasteType,
-        enum: WasteType,
-        description: "Type of waste in the physical recycle bin.",
-        example: WasteType.RECYCLABLE,
+        type: Boolean,
+        description: "Whether the waste object is classified and litered on true trash.",
+        example: 2.5,
     })
-    @IsEnum(WasteType)
+    @IsBoolean()
     @Expose()
-    wasteType: WasteType;
+    isCorrect: boolean;
 }

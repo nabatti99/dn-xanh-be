@@ -9,12 +9,6 @@ export class SmartRecycleBinClassificationHistoryEntity extends AppBaseEntity {
     @Column({ type: "double precision" })
     volume: number;
 
-    @Column({
-        type: "enum",
-        enum: WasteType,
-    })
-    wasteType: WasteType;
-
     @Column({ type: "boolean" })
     isCorrect: boolean;
 
