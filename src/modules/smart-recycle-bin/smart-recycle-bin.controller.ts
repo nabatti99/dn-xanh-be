@@ -8,7 +8,7 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
 import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
-import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
+import { SmartRecycleBinSubmitRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
 import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
 import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
 import { SmartRecycleBinService } from "./smart-recycle-bin.service";
@@ -48,9 +48,9 @@ export class SmartRecycleBinController {
         return this.smartRecycleBinService.uploadAndClassify(request);
     }
 
-    @Post("classify")
-    classify(@Body() smartRecycleBinClassifyRequestDto: SmartRecycleBinClassifyRequestDto) {
-        return this.smartRecycleBinService.classify(smartRecycleBinClassifyRequestDto);
+    @Post("submit")
+    submit(@Body() smartRecycleBinSubmitRequestDto: SmartRecycleBinSubmitRequestDto) {
+        return this.smartRecycleBinService.submit(smartRecycleBinSubmitRequestDto);
     }
 
     @ApiBearerAuth()

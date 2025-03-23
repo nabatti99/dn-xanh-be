@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class SmartRecycleBinClassifyRequestDto {
+export class SmartRecycleBinSubmitRequestDto {
     @ApiProperty({
         type: String,
         description: "Embedded system ID of the physical recycle bin.",
@@ -27,7 +27,7 @@ export class SmartRecycleBinClassifyRequestDto {
     @ApiProperty({
         type: Boolean,
         description: "Whether the waste object is classified and litered on true trash.",
-        example: 2.5,
+        example: true,
     })
     @IsBoolean()
     @Expose()

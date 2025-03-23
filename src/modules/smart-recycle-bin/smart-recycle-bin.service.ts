@@ -8,7 +8,7 @@ import { Repository } from "typeorm";
 import { WasteClassification, WasteClassificationMap, WasteType } from "./constants";
 import { SmartRecycleBinCheckClaimRewardRequestDto } from "./dtos/smart-recycle-bin-check-claim-reward-request.dto";
 import { SmartRecycleBinClaimRewardRequestDto } from "./dtos/smart-recycle-bin-claim-reward-request.dto";
-import { SmartRecycleBinClassifyRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
+import { SmartRecycleBinSubmitRequestDto } from "./dtos/smart-recycle-bin-classify-request.dto";
 import { SmartRecycleBinCreateRequestDto } from "./dtos/smart-recycle-bin-create-request.dto";
 import { SmartRecycleBinGetRequestDto } from "./dtos/smart-recycle-bin-get-request.dto";
 import { PHYSICAL_RECYCLE_BIN_REPOSITORY_INJECT_KEY, PhysicalRecycleBinEntity } from "./entities/physical-recycle-bin.entity";
@@ -110,22 +110,22 @@ export class SmartRecycleBinService {
         return maxWasteType;
     }
 
-    async classify(smartRecycleBinClassifyRequestDto: SmartRecycleBinClassifyRequestDto) {
+    async submit(smartRecycleBinSubmitRequestDto: SmartRecycleBinSubmitRequestDto) {
         const physicalRecycleBin = await this.physicalRecycleBinRepository.findOne({
             where: {
-                embeddedSystemId: smartRecycleBinClassifyRequestDto.embeddedSystemId,
+                embeddedSystemId: smartRecycleBinSubmitRequestDto.embeddedSystemId,
             },
         });
 
         const newSmartRecycleBinClassificationHistory = await this.smartRecycleBinClassificationHistoryRepository.save({
             physicalRecycleBinId: physicalRecycleBin.id,
-            volume: smartRecycleBinClassifyRequestDto.volume,
-            isCorrect: smartRecycleBinClassifyRequestDto.isCorrect
+            volume: smartRecycleBinSubmitRequestDto.volume,
+            isCorrect: smartRecycleBinSubmitRequestDto.isCorrect,
         });
 
-        const deltaVolume = Math.abs(smartRecycleBinClassifyRequestDto.volume - physicalRecycleBin.currentVolume);
+        const deltaVolume = Math.abs(smartRecycleBinSubmitRequestDto.volume - physicalRecycleBin.currentVolume);
 
-        physicalRecycleBin.currentVolume = smartRecycleBinClassifyRequestDto.volume;
+        physicalRecycleBin.currentVolume = smartRecycleBinSubmitRequestDto.volume;
         await this.physicalRecycleBinRepository.save(physicalRecycleBin);
 
         if (newSmartRecycleBinClassificationHistory.isCorrect) {
@@ -166,7 +166,7 @@ export class SmartRecycleBinService {
             });
             const { predictions } = serverResponse;
             // const prediction = predictions[0];
-            const prediction = "plastic_bottle"
+            const prediction = "plastic_bottle";
             const predictionDisplay = WasteClassificationMap[prediction];
 
             let wasteTypePrediction: WasteType;
@@ -178,7 +178,6 @@ export class SmartRecycleBinService {
                 prediction,
                 predictionDisplay,
                 wasteTypePrediction,
-                
             };
         } catch (error) {
             console.log("Error when uploading and classifying waste images");
