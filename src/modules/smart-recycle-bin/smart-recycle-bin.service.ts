@@ -164,9 +164,17 @@ export class SmartRecycleBinService {
                     ...formData.getHeaders(),
                 },
             });
+
+            // if (!serverResponse.should_classification) {
+            //     return {
+            //         shouldClassification: false,
+            //     }
+            // }
+
             const { predictions } = serverResponse;
-            // const prediction = predictions[0];
-            const prediction = "plastic_bottle";
+            const prediction = predictions[0];
+            // const prediction = "plastic_bottle";
+
             const predictionDisplay = WasteClassificationMap[prediction];
 
             let wasteTypePrediction: WasteType;
@@ -174,7 +182,15 @@ export class SmartRecycleBinService {
                 if (WasteClassification[wasteType].includes(prediction)) wasteTypePrediction = wasteType;
             });
 
+            console.log({
+                // shouldClassification: true,
+                prediction,
+                predictionDisplay,
+                wasteTypePrediction,
+            });
+
             return {
+                // shouldClassification: true,
                 prediction,
                 predictionDisplay,
                 wasteTypePrediction,
