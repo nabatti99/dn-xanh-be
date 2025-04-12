@@ -19,16 +19,18 @@ export enum WasteType {
 }
 
 export const WasteClassificationMap = {
-    "orange": "Trái Cam",
-    "pumpkin": "Trái Bí Ngô",
+    "banana": "Trái Chuối",
+    "lemon": "Trái Chanh",
+    "tomato": "Trái Cà Chua",
     "metal": "Kim Loại",
-    "plastic-bottle": "Chai Nhựa",
-    "milk-carton": "Hộp Sữa",
-    "nilon-bag": "Túi Nilon",
+    "paperboard_packaging": "Thùng Giấy",
+    "plastic_bag": "Túi Nhựa",
+    "plastic_bottle": "Chai Nhựa",
+    "toothpaste_tube": "Tuýp Kem Đánh Răng",
 };
 
 export const WasteClassification: Record<WasteType, string[]> = {
-    [WasteType.RECYCLABLE]: ["metal", "plastic-bottle"],
-    [WasteType.ORGANIC]: ["orange", "pumpkin"],
-    [WasteType.NON_RECYCLABLE]: ["milk-carton"],
+    [WasteType.RECYCLABLE]: ["metal", "paperboard_packaging", "plastic_bottle"],
+    [WasteType.ORGANIC]: ["banana", "lemon", "tomato"],
+    [WasteType.NON_RECYCLABLE]: ["toothpaste_tube"]
 };
